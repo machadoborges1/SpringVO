@@ -2,6 +2,7 @@ package com.hmbn.SpringVO.exceptions.handler;
 
 import java.util.Date;
 
+import com.hmbn.SpringVO.exceptions.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.hmbn.SpringVO.exceptions.ExceptionResponse;
+import com.hmbn.SpringVO.exceptions.RequiredObjectIsNullException;
 import com.hmbn.SpringVO.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
@@ -39,6 +40,18 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 				request.getDescription(false));
 		
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(RequiredObjectIsNullException.class)
+	public final ResponseEntity<ExceptionResponse> handleBadRequestExceptions(
+			Exception ex, WebRequest request) {
+		
+		ExceptionResponse exceptionResponse = new ExceptionResponse(
+				new Date(),
+				ex.getMessage(),
+				request.getDescription(false));
+		
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
 	}
 
 }
